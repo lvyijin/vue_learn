@@ -2,33 +2,32 @@
   <div id="app">
     <h1>购物车示例</h1>
     <p>账号: {{ email }}</p>
+
     <p></p>
     <h2>产品</h2>
-    <ul v-for="product in products"
-        :key="product.id">
-        <li>
-          <p>{{ product.name }}: 余 {{ product.number }} 件</p>
-          <button :disabled="product.number<=0" v-on:click="addProducttoCart(product.id)">加入购物车</button>
-        </li>
-    </ul>
+    <Products v-bind:products="products" v-on:add-products-to-cart="addProductstoCart"></Products>
+
     <h2>清单</h2>
     <p>请添加产品到购物车</p>
-    <ul v-for="cproduct in cartProducts"
-        :key="cproduct.id">
-        <li v-show="cproduct.number>0">
-          <p>{{ cproduct.name }}: {{ cproduct.number }}
-            <button v-on:click="deleteProductsFromCart(cproduct.id)"> - </button>
-          </p>
-        </li>
-    </ul>
+    <CartProducts v-bind:cartProducts="cartProducts" v-on:delete-products-from-cart="deleteProductsFromCart"></CartProducts>
+    
     <p>合计: {{ allProductCount }}</p>
+
     <button :disabled="allProductCount<=0">提交</button>
   </div>
 </template>
 
 <script>
+
+import Products from './components/Products.vue'
+import CartProducts from './components/CartProducts.vue'
+
 export default{
   name: "cart",
+  components: {
+    Products,
+    CartProducts
+  },
   data(){
     return {
       email: "yijing.lv@shopee.com",
@@ -77,7 +76,9 @@ export default{
     }
   },
   methods:{
-    addProducttoCart: function(id){
+    addProductstoCart: function(id){
+      console.log("enter addProducttoCart")
+      console.log(id)
       this.products[id].number--
       this.cartProducts[id].number++
     },
